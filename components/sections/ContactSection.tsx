@@ -193,7 +193,7 @@ export function ContactSection() {
                     {sentDirectly ? "Delivered to Gmail!" : "Message Prepared & Registered!"}
                   </h3>
                   <p className="text-xs sm:text-sm text-zinc-300 max-w-md mx-auto leading-relaxed">
-                    Thank you, <strong className="text-white">{name}</strong>! {sentDirectly 
+                    Thank you, <strong className="text-zinc-100">{name}</strong>! {sentDirectly 
                       ? "Your email was dispatched directly to mdshajdulhaqueemon@gmail.com via SMTP."
                       : "Your message has been processed. You can also send it directly via Gmail or WhatsApp in 1 click below:"
                     }
