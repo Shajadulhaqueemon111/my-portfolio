@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import nodemailer from "nodemailer";
 
 export async function POST(req: NextRequest) {
   try {
@@ -28,95 +29,113 @@ export async function POST(req: NextRequest) {
     const cleanEmail = email.trim().substring(0, 100);
     const cleanSubject = (subject || (type === "live-chat" ? "Live Quick Message" : "Portfolio Inquiry")).trim().substring(0, 150);
     const cleanMessage = message.trim().substring(0, 2000);
-    const isLiveChat = type === "live-chat";
+    const recipientEmail = process.env.GMAIL_USER || "mdshajdulhaqueemon@gmail.com";
+    const appPassword = process.env.GMAIL_APP_PASSWORD;
 
-    // 1. Dispatch to Discord Webhook if configured
+    let emailSentViaSmtp = false;
+    let smtpError: string | null = null;
+
+    // 1. Try sending directly to Gmail via Nodemailer SMTP if app password configured
+    if (appPassword) {
+      try {
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: recipientEmail,
+            pass: appPassword.replace(/\s+/g, ""), // strip any spaces
+          },
+        });
+
+        await transporter.sendMail({
+          from: `"Portfolio Contact Form" <${recipientEmail}>`,
+          to: recipientEmail,
+          replyTo: cleanEmail,
+          subject: `⚡ [Portfolio Message] ${cleanSubject} — from ${cleanName}`,
+          text: `You received a new message from your portfolio contact form:\n\nName: ${cleanName}\nEmail: ${cleanEmail}\nSubject: ${cleanSubject}\nTime: ${new Date().toLocaleString()}\n\nMessage:\n${cleanMessage}\n\n--\nYou can reply directly to this email to contact ${cleanName} (${cleanEmail}).`,
+          html: `
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #09090b; color: #fafafa; border-radius: 12px; border: 1px solid #27272a; overflow: hidden;">
+              <div style="background: #111115; padding: 20px 24px; border-bottom: 1px solid #27272a;">
+                <h2 style="margin: 0; color: #10b981; font-size: 18px;">⚡ New Portfolio Message Received</h2>
+                <p style="margin: 4px 0 0 0; color: #a1a1aa; font-size: 13px;">Sent from Md Sajedul Haque Emon's Portfolio</p>
+              </div>
+              <div style="padding: 24px; font-size: 14px; line-height: 1.6;">
+                <p style="margin-top: 0;"><strong>Sender Name:</strong> ${cleanName}</p>
+                <p><strong>Sender Email:</strong> <a href="mailto:${cleanEmail}" style="color: #38bdf8; text-decoration: underline;">${cleanEmail}</a></p>
+                <p><strong>Subject:</strong> ${cleanSubject}</p>
+                <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
+                <hr style="border: none; border-top: 1px solid #27272a; margin: 20px 0;" />
+                <p style="font-weight: 600; color: #34d399; margin-bottom: 8px;">Message:</p>
+                <div style="background: #18181b; padding: 16px; border-radius: 8px; border: 1px solid #27272a; white-space: pre-wrap; color: #e4e4e7;">${cleanMessage}</div>
+                <div style="margin-top: 24px;">
+                  <a href="mailto:${cleanEmail}?subject=Re: ${encodeURIComponent(cleanSubject)}" style="display: inline-block; background: #10b981; color: #09090b; font-weight: 600; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-size: 13px;">Reply to ${cleanName}</a>
+                </div>
+              </div>
+              <div style="background: #09090b; padding: 14px 24px; border-top: 1px solid #27272a; color: #71717a; font-size: 12px; text-align: center;">
+                Delivered straight to ${recipientEmail} via Nodemailer SMTP.
+              </div>
+            </div>
+          `,
+        });
+
+        emailSentViaSmtp = true;
+      } catch (err: unknown) {
+        console.error("Nodemailer SMTP error:", err);
+        smtpError = err instanceof Error ? err.message : "SMTP sending failed";
+      }
+    }
+
+    // 2. Also try Discord Webhook if configured
     const discordWebhook = process.env.DISCORD_WEBHOOK_URL;
-    let discordSent = false;
     if (discordWebhook) {
       try {
-        const response = await fetch(discordWebhook, {
+        await fetch(discordWebhook, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            username: isLiveChat ? "Portfolio Live Messenger" : "Portfolio Contact Form",
+            username: "Portfolio Sentinel",
             avatar_url: "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/mail.svg",
             embeds: [
               {
-                title: isLiveChat ? "💬 Live Chat Message Received!" : "📬 New Contact Inquiry!",
-                color: isLiveChat ? 0x06b6d4 : 0x10b981,
+                title: "📬 New Message from Portfolio Contact Form!",
+                color: 0x10b981,
                 fields: [
                   { name: "Sender", value: cleanName, inline: true },
-                  { name: "Email", value: cleanEmail, inline: true },
+                  { name: "Sender Email", value: cleanEmail, inline: true },
                   { name: "Subject", value: cleanSubject, inline: false },
                   { name: "Message", value: cleanMessage, inline: false },
-                  { name: "Received At", value: new Date().toLocaleString(), inline: true }
+                  { name: "Delivered To", value: recipientEmail, inline: true },
+                  { name: "Time", value: new Date().toLocaleString(), inline: true }
                 ],
-                footer: { text: "Md Sajedul Haque Emon Portfolio Notification System" }
+                footer: { text: "Md Sajedul Haque Emon Portfolio" }
               }
             ]
           })
-        });
-        discordSent = response.ok;
-      } catch (err) {
-        console.error("Discord contact webhook failed:", err);
+        }).catch((e) => console.error(e));
+      } catch {
+        // ignore
       }
     }
 
-    // 2. Dispatch to Telegram Bot if configured
-    const tgToken = process.env.TELEGRAM_BOT_TOKEN;
-    const tgChatId = process.env.TELEGRAM_CHAT_ID;
-    let telegramSent = false;
-    if (tgToken && tgChatId) {
-      try {
-        const tgText = `🔔 *New Message on Portfolio!*\n\n*From:* ${cleanName}\n*Email:* ${cleanEmail}\n*Type:* ${isLiveChat ? "Live Chat" : "Contact Form"}\n*Subject:* ${cleanSubject}\n\n*Message:*\n${cleanMessage}`;
-        const response = await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: tgChatId,
-            text: tgText,
-            parse_mode: "Markdown"
-          })
-        });
-        telegramSent = response.ok;
-      } catch (err) {
-        console.error("Telegram contact notification failed:", err);
-      }
-    }
-
-    // Also support custom generic webhook (e.g. Zapier, Make, n8n, Slack)
-    const customWebhook = process.env.CUSTOM_WEBHOOK_URL;
-    if (customWebhook) {
-      try {
-        await fetch(customWebhook, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: cleanName,
-            email: cleanEmail,
-            subject: cleanSubject,
-            message: cleanMessage,
-            timestamp: new Date().toISOString(),
-            type: isLiveChat ? "live-chat" : "contact"
-          })
-        });
-      } catch (err) {
-        console.error("Custom webhook failed:", err);
-      }
-    }
+    // Construct mailto link and web Gmail compose link as direct fallback
+    const mailtoSubject = encodeURIComponent(`Portfolio Message: ${cleanSubject}`);
+    const mailtoBody = encodeURIComponent(`Hi Emon,\n\nName: ${cleanName}\nEmail: ${cleanEmail}\n\nMessage:\n${cleanMessage}`);
+    const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${recipientEmail}&su=${mailtoSubject}&body=${mailtoBody}`;
+    const whatsappUrl = `https://wa.me/8801405851592?text=${encodeURIComponent(`Hi Emon, I sent a message via your portfolio.\nName: ${cleanName}\nEmail: ${cleanEmail}\nMessage: ${cleanMessage}`)}`;
 
     return NextResponse.json({
       success: true,
-      message: "Thank you! Your message has been received. I will get back to you shortly.",
-      channelStatus: {
-        discord: discordSent,
-        telegram: telegramSent,
-        webhookActive: Boolean(discordWebhook || (tgToken && tgChatId) || customWebhook)
-      }
+      message: emailSentViaSmtp 
+        ? "Your message has been sent directly to Emon's Gmail inbox!" 
+        : "Message registered! You can also click below to open directly in Gmail or WhatsApp.",
+      emailSentViaSmtp,
+      smtpError,
+      requiresPasswordConfig: !appPassword,
+      gmailComposeUrl,
+      whatsappUrl,
+      recipientEmail,
     });
   } catch (error) {
-    console.error("Contact API error:", error);
-    return NextResponse.json({ success: false, error: "Failed to send message. Please try again or email directly." }, { status: 500 });
+    console.error("Contact API handler error:", error);
+    return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });
   }
 }

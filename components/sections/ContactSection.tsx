@@ -15,6 +15,9 @@ export function ContactSection() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [sentDirectly, setSentDirectly] = useState(false);
+  const [gmailUrl, setGmailUrl] = useState("");
+  const [waUrl, setWaUrl] = useState("");
 
   const handleCopyEmail = () => {
     playSound("pop");
@@ -60,6 +63,9 @@ export function ContactSection() {
 
       if (res.ok && data.success) {
         setStatus("success");
+        setSentDirectly(Boolean(data.emailSentViaSmtp));
+        setGmailUrl(data.gmailComposeUrl || `https://mail.google.com/mail/?view=cm&fs=1&to=${developerInfo.email}&su=${encodeURIComponent(subject || "Portfolio Inquiry")}&body=${encodeURIComponent(message)}`);
+        setWaUrl(data.whatsappUrl || developerInfo.whatsappUrl);
         playSound("success");
         try {
           confetti({
@@ -179,24 +185,60 @@ export function ContactSection() {
           <div className="lg:col-span-7">
             <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6 sm:p-8 backdrop-blur-md shadow-xl">
               {status === "success" ? (
-                <div className="py-12 text-center space-y-4 animate-in fade-in duration-300">
+                <div className="py-8 text-center space-y-4 animate-in fade-in duration-300">
                   <div className="w-14 h-14 rounded-full bg-emerald-950/80 border border-emerald-700/60 text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/10">
                     <CheckCircle2 className="w-7 h-7" />
                   </div>
-                  <h3 className="text-xl font-bold text-zinc-100">Message Received!</h3>
-                  <p className="text-sm text-zinc-400 max-w-md mx-auto leading-relaxed">
-                    Thank you, <strong className="text-zinc-200">{name}</strong>. Your message has been dispatched to Emon via real-time notification webhook. You will receive a response shortly.
+                  <h3 className="text-xl font-bold text-zinc-100">
+                    {sentDirectly ? "Delivered to Gmail!" : "Message Prepared & Registered!"}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-zinc-300 max-w-md mx-auto leading-relaxed">
+                    Thank you, <strong className="text-white">{name}</strong>! {sentDirectly 
+                      ? "Your email was dispatched directly to mdshajdulhaqueemon@gmail.com via SMTP."
+                      : "Your message has been processed. You can also send it directly via Gmail or WhatsApp in 1 click below:"
+                    }
                   </p>
-                  <button
-                    onClick={() => {
-                      setStatus("idle");
-                      setMessage("");
-                      setSubject("");
-                    }}
-                    className="mt-4 text-xs font-medium text-emerald-400 hover:text-emerald-300 underline underline-offset-4 cursor-pointer"
-                  >
-                    Send another inquiry
-                  </button>
+
+                  {/* Direct 1-Click Send Actions */}
+                  <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
+                    {gmailUrl && (
+                      <a
+                        href={gmailUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => playSound("pop")}
+                        className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-600/90 hover:bg-red-500 text-white text-xs font-semibold shadow-md transition-all"
+                      >
+                        <Mail className="w-3.5 h-3.5" />
+                        <span>Send via Gmail Web</span>
+                      </a>
+                    )}
+                    {waUrl && (
+                      <a
+                        href={waUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => playSound("pop")}
+                        className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md transition-all"
+                      >
+                        <WhatsAppIcon className="w-3.5 h-3.5" />
+                        <span>Send via WhatsApp</span>
+                      </a>
+                    )}
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      onClick={() => {
+                        setStatus("idle");
+                        setMessage("");
+                        setSubject("");
+                      }}
+                      className="text-xs font-medium text-emerald-400 hover:text-emerald-300 underline underline-offset-4 cursor-pointer"
+                    >
+                      Send another message
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
