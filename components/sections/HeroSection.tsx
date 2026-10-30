@@ -34,10 +34,10 @@ export function HeroSection({ onOpenResume }: HeroSectionProps) {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-emerald-500/10 blur-[130px] rounded-full pointer-events-none"></div>
       <div className="absolute top-1/3 right-10 w-[300px] h-[300px] bg-cyan-500/8 blur-[110px] rounded-full pointer-events-none"></div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           {/* Left Column: Headlines & Actions */}
-          <div className="lg:col-span-7 space-y-6 text-left">
+          <div className="lg:col-span-6 space-y-6 text-left">
             {/* Availability Badge */}
             <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-zinc-900/90 border border-zinc-800 shadow-sm backdrop-blur-md">
               <span className="relative flex h-2.5 w-2.5">
@@ -113,7 +113,7 @@ export function HeroSection({ onOpenResume }: HeroSectionProps) {
           </div>
 
           {/* Right Column: Interactive Code Sandbox */}
-          <div className="lg:col-span-5 relative">
+          <div className="lg:col-span-6 relative w-full">
             <CodeWindow />
           </div>
         </div>

@@ -71,50 +71,56 @@ export const enterpriseApi = createApi({
   return (
     <div className="w-full rounded-2xl border border-zinc-800/80 bg-zinc-950/90 shadow-2xl shadow-emerald-500/5 backdrop-blur-xl overflow-hidden transition-all duration-300 hover:border-zinc-700/70">
       {/* Top Window Bar */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800/80 bg-zinc-900/60">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-red-500/80 hover:opacity-100 transition-opacity"></div>
-          <div className="w-3 h-3 rounded-full bg-yellow-500/80 hover:opacity-100 transition-opacity"></div>
-          <div className="w-3 h-3 rounded-full bg-emerald-500/80 hover:opacity-100 transition-opacity"></div>
-          <span className="ml-2 text-[11px] font-mono text-zinc-500 flex items-center gap-1.5">
-            <Terminal className="w-3 h-3 text-zinc-400" />
+      <div className="flex items-center justify-between px-3.5 sm:px-4 py-2.5 sm:py-3 border-b border-zinc-800/80 bg-zinc-900/60 gap-2">
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 shrink-0">
+            <div className="w-3 h-3 rounded-full bg-red-500/80 hover:opacity-100 transition-opacity"></div>
+            <div className="w-3 h-3 rounded-full bg-yellow-500/80 hover:opacity-100 transition-opacity"></div>
+            <div className="w-3 h-3 rounded-full bg-emerald-500/80 hover:opacity-100 transition-opacity"></div>
+          </div>
+          <span className="text-[11px] font-mono text-zinc-500 hidden xl:flex items-center gap-1.5 ml-1">
+            <Terminal className="w-3 h-3 text-zinc-400 shrink-0" />
             <span>emon@m360ict:~/portfolio</span>
+          </span>
+          <span className="text-[11px] font-mono text-zinc-500 hidden sm:flex xl:hidden items-center gap-1.5 ml-1">
+            <Terminal className="w-3 h-3 text-zinc-400 shrink-0" />
+            <span>~/portfolio</span>
           </span>
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center gap-1 bg-zinc-900/90 p-1 rounded-lg border border-zinc-800/80">
+        <div className="flex items-center gap-1 bg-zinc-900/90 p-1 rounded-lg border border-zinc-800/80 shrink-0">
           <button
             onClick={() => handleTabChange("profile")}
-            className={`px-2.5 py-1 text-xs font-mono rounded-md transition-all flex items-center gap-1.5 ${
+            className={`px-2 sm:px-2.5 py-1 text-xs font-mono rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap ${
               activeTab === "profile"
-                ? "bg-zinc-800 text-emerald-400 shadow-sm border border-zinc-700/60"
+                ? "bg-zinc-800 text-emerald-400 shadow-sm border border-zinc-700/60 font-medium"
                 : "text-zinc-400 hover:text-zinc-200"
             }`}
           >
-            <Code2 className="w-3 h-3" />
-            <span className="hidden sm:inline">Profile.tsx</span>
+            <Code2 className="w-3.5 h-3.5 shrink-0" />
+            <span>Profile.tsx</span>
           </button>
           <button
             onClick={() => handleTabChange("architecture")}
-            className={`px-2.5 py-1 text-xs font-mono rounded-md transition-all flex items-center gap-1.5 ${
+            className={`px-2 sm:px-2.5 py-1 text-xs font-mono rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap ${
               activeTab === "architecture"
-                ? "bg-zinc-800 text-emerald-400 shadow-sm border border-zinc-700/60"
+                ? "bg-zinc-800 text-emerald-400 shadow-sm border border-zinc-700/60 font-medium"
                 : "text-zinc-400 hover:text-zinc-200"
             }`}
           >
-            <Layers className="w-3 h-3" />
-            <span className="hidden sm:inline">DataFlow.ts</span>
+            <Layers className="w-3.5 h-3.5 shrink-0" />
+            <span>DataFlow.ts</span>
           </button>
           <button
             onClick={() => handleTabChange("preview")}
-            className={`px-2.5 py-1 text-xs font-mono rounded-md transition-all flex items-center gap-1.5 ${
+            className={`px-2 sm:px-2.5 py-1 text-xs font-mono rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap ${
               activeTab === "preview"
                 ? "bg-emerald-500/10 text-emerald-400 shadow-sm border border-emerald-500/30 font-semibold"
                 : "text-zinc-400 hover:text-zinc-200"
             }`}
           >
-            <Eye className="w-3 h-3 text-emerald-400" />
+            <Eye className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
             <span>Live UI</span>
           </button>
         </div>
@@ -123,13 +129,13 @@ export const enterpriseApi = createApi({
         {activeTab !== "preview" ? (
           <button
             onClick={handleCopy}
-            className="p-1.5 text-zinc-400 hover:text-zinc-200 rounded-md hover:bg-zinc-800 transition-colors"
+            className="p-1.5 text-zinc-400 hover:text-zinc-200 rounded-md hover:bg-zinc-800 transition-colors shrink-0"
             title="Copy snippet"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
           </button>
         ) : (
-          <div className="w-6"></div>
+          <div className="w-7 shrink-0"></div>
         )}
       </div>
 
@@ -223,11 +229,10 @@ export const enterpriseApi = createApi({
                     playSound("pop");
                     setLiked(!liked);
                   }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-mono border transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 ${
-                    liked
+                  className={`px-3 py-1.5 rounded-lg text-xs font-mono border transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 ${liked
                       ? "bg-rose-500/20 border-rose-500/40 text-rose-300"
                       : "bg-zinc-800 border-zinc-700/60 text-zinc-300 hover:bg-zinc-700"
-                  }`}
+                    }`}
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>{liked ? "Fired (Clean UI)" : "Test Micro-interaction"}</span>
@@ -253,7 +258,7 @@ export const enterpriseApi = createApi({
           <span className="hidden sm:inline text-zinc-600">•</span>
           <span className="hidden sm:inline">UTF-8</span>
         </div>
-        <span className="text-zinc-400">100% Production Ready</span>
+        {/* <span className="text-zinc-400">100% Production Ready</span> */}
       </div>
     </div>
   );
