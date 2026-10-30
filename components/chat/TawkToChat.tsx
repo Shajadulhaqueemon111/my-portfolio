@@ -8,11 +8,10 @@ interface TawkToChatProps {
 }
 
 export function TawkToChat({
-  propertyId = process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID,
+  propertyId = process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID || "6ae4b3ee25dc9e346ec8a3dd",
   widgetId = process.env.NEXT_PUBLIC_TAWK_WIDGET_ID || "default",
 }: TawkToChatProps) {
-  // If propertyId is not configured yet, don't load script to prevent 404
-  if (!propertyId || propertyId === "YOUR_PROPERTY_ID") {
+  if (!propertyId) {
     return null;
   }
 
