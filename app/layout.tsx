@@ -87,7 +87,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
-      <body className="min-h-screen bg-[#09090b] text-[#fafafa] antialiased selection:bg-emerald-500/20 selection:text-emerald-400">
+      <body className="min-h-screen antialiased selection:bg-emerald-500/20 selection:text-emerald-400">
         <VisitorTracker />
         {children}
         <LiveChatWidget />

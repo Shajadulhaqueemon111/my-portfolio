@@ -22,7 +22,7 @@ export default function Home() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-[#fafafa] flex flex-col selection:bg-emerald-500/20 selection:text-emerald-400">
+    <div className="min-h-screen flex flex-col selection:bg-emerald-500/20 selection:text-emerald-400">
       {/* Sticky Blur Navbar */}
       <Navbar onOpenResume={() => setResumeOpen(true)} />
 

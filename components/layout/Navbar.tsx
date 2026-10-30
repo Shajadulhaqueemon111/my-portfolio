@@ -49,14 +49,34 @@ export function Navbar({ onOpenResume }: NavbarProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    try {
+      const savedTheme = localStorage.getItem("emon_portfolio_theme") as "dark" | "light" | null;
+      if (savedTheme === "light") {
+        setTheme("light");
+        document.documentElement.setAttribute("data-theme", "light");
+        document.documentElement.classList.add("light");
+      }
+    } catch {
+      // fallback
+    }
+  }, []);
+
   const toggleTheme = () => {
     playSound("pop");
     const nextTheme = theme === "dark" ? "light" : "dark";
     setTheme(nextTheme);
+    try {
+      localStorage.setItem("emon_portfolio_theme", nextTheme);
+    } catch {
+      // fallback
+    }
     if (nextTheme === "light") {
       document.documentElement.setAttribute("data-theme", "light");
+      document.documentElement.classList.add("light");
     } else {
       document.documentElement.removeAttribute("data-theme");
+      document.documentElement.classList.remove("light");
     }
   };
 
