@@ -4,6 +4,7 @@ import "./globals.css";
 import { VisitorTracker } from "@/components/tracker/VisitorTracker";
 import { LiveChatWidget } from "@/components/ui/LiveChatWidget";
 import { TawkToChat } from "@/components/chat/TawkToChat";
+import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     "UI/UX Developer",
     "Web Developer Bangladesh"
   ],
-  authors: [{ name: "Md Sajedul Haque Emon", url: "https://github.com/emon-frontend" }],
+  authors: [{ name: "Md Sajedul Haque Emon", url: "https://github.com/Shajadulhaqueemon111" }],
   creator: "Md Sajedul Haque Emon",
   openGraph: {
     type: "website",
@@ -88,10 +89,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <body className="min-h-screen antialiased selection:bg-emerald-500/20 selection:text-emerald-400">
-        <VisitorTracker />
-        {children}
-        <LiveChatWidget />
-        <TawkToChat />
+        <SmoothScrollProvider>
+          <VisitorTracker />
+          {children}
+          <LiveChatWidget />
+          <TawkToChat />
+        </SmoothScrollProvider>
       </body>
     </html>
   );

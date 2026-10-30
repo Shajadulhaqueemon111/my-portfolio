@@ -5,6 +5,8 @@ import { ExternalLink, Sparkles, CheckCircle2, Kanban, FileSearch, Users, Layers
 import { GithubIcon } from "@/components/ui/Icons";
 import { projectsData } from "@/data/projects";
 import { playSound } from "@/lib/audio";
+import { Tilt3DCard } from "@/components/ui/Tilt3DCard";
+import { ScrollReveal, TextReveal } from "@/components/motion/MotionWrapper";
 
 export function FeaturedProjectSection() {
   const featured = projectsData.find((p) => p.featured) || projectsData[0];
@@ -22,21 +24,25 @@ export function FeaturedProjectSection() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
-        <div className="space-y-3 mb-12 text-center sm:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 text-xs font-mono">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Spotlight Project</span>
+        <ScrollReveal>
+          <div className="space-y-3 mb-12 text-center sm:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 text-xs font-mono">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Spotlight Project</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-100">
+              <TextReveal text={featured.title} />
+            </h2>
+            <p className="text-sm sm:text-base text-zinc-400 max-w-2xl leading-relaxed">
+              {featured.description}
+            </p>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-100">
-            {featured.title}
-          </h2>
-          <p className="text-sm sm:text-base text-zinc-400 max-w-2xl leading-relaxed">
-            {featured.description}
-          </p>
-        </div>
+        </ScrollReveal>
 
-        {/* Browser Mockup Shell */}
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl overflow-hidden">
+        {/* Browser Mockup Shell with 3D Tilt */}
+        <ScrollReveal delay={0.15}>
+          <Tilt3DCard intensity={5} className="w-full">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl overflow-hidden">
           {/* Browser Chrome Header */}
           <div className="px-4 py-3 bg-zinc-900/80 border-b border-zinc-800 flex flex-wrap items-center justify-between gap-3">
             {/* Window Dots & URL Bar */}
@@ -297,7 +303,9 @@ export function FeaturedProjectSection() {
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </Tilt3DCard>
+    </ScrollReveal>
+  </div>
+</section>
   );
 }

@@ -6,6 +6,8 @@ import { GithubIcon } from "@/components/ui/Icons";
 import { projectsData } from "@/data/projects";
 import { Project } from "@/lib/types";
 import { playSound } from "@/lib/audio";
+import { Tilt3DCard } from "@/components/ui/Tilt3DCard";
+import { ScrollReveal, TextReveal, StaggerContainer, StaggerItem } from "@/components/motion/MotionWrapper";
 
 interface ProjectsSectionProps {
   onSelectProject: (project: Project) => void;
@@ -29,47 +31,48 @@ export function ProjectsSection({ onSelectProject }: ProjectsSectionProps) {
     <section id="projects" className="py-24 border-t border-zinc-800/60 relative">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <div className="space-y-3 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 text-xs font-mono">
-              <FolderGit2 className="w-3.5 h-3.5" />
-              <span>Portfolio Gallery</span>
+        <ScrollReveal>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div className="space-y-3 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 text-xs font-mono">
+                <FolderGit2 className="w-3.5 h-3.5" />
+                <span>Portfolio Gallery</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-100">
+                <TextReveal text="Selected Work." />
+              </h2>
+              <p className="text-sm sm:text-base text-zinc-400 max-w-xl leading-relaxed">
+                A collection of products, applications and interfaces I&apos;ve built with modern frontend engineering principles.
+              </p>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-100">
-              Selected Work.
-            </h2>
-            <p className="text-sm sm:text-base text-zinc-400 max-w-xl leading-relaxed">
-              A collection of products, applications and interfaces I&apos;ve built with modern frontend engineering principles.
-            </p>
-          </div>
 
-          {/* Filter Chips */}
-          <div className="flex flex-wrap items-center justify-center md:justify-end gap-1.5 bg-zinc-900/60 p-1.5 rounded-xl border border-zinc-800">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => handleFilter(cat)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                  filter === cat
-                    ? "bg-zinc-800 text-emerald-400 border border-zinc-700/80 shadow-sm"
-                    : "text-zinc-400 hover:text-zinc-200"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
+            {/* Filter Chips */}
+            <div className="flex flex-wrap items-center justify-center md:justify-end gap-1.5 bg-zinc-900/60 p-1.5 rounded-xl border border-zinc-800">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => handleFilter(cat)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                    filter === cat
+                      ? "bg-zinc-800 text-emerald-400 border border-zinc-700/80 shadow-sm"
+                      : "text-zinc-400 hover:text-zinc-200"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Projects Grid with Stagger & 3D Tilt */}
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="group rounded-2xl border border-zinc-800/90 bg-zinc-900/40 hover:bg-zinc-900/80 backdrop-blur-sm p-6 flex flex-col justify-between transition-all duration-300 hover:border-zinc-700 hover:shadow-xl hover:-translate-y-1 relative overflow-hidden"
-            >
-              {/* Subtle Ambient Hover Glow */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-2xl rounded-full group-hover:bg-emerald-500/10 transition-all pointer-events-none"></div>
+            <StaggerItem key={project.id}>
+              <Tilt3DCard intensity={10} className="h-full">
+                <div className="h-full group rounded-2xl border border-zinc-800/90 bg-zinc-900/40 hover:bg-zinc-900/80 backdrop-blur-sm p-6 flex flex-col justify-between transition-all duration-300 hover:border-zinc-700 hover:shadow-xl relative overflow-hidden">
+                  {/* Subtle Ambient Hover Glow */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-2xl rounded-full group-hover:bg-emerald-500/10 transition-all pointer-events-none"></div>
 
               {/* Card Header & Category */}
               <div>
@@ -165,8 +168,10 @@ export function ProjectsSection({ onSelectProject }: ProjectsSectionProps) {
                 </button>
               </div>
             </div>
+          </Tilt3DCard>
+        </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

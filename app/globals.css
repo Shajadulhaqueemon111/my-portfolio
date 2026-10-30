@@ -488,6 +488,31 @@ html.light footer {
   border-top-color: #e2e8f0 !important;
 }
 
+/* 16. 3D Perspective & Lenis Smooth Scroll Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
 /* Motion reduction compliance */
 @media (prefers-reduced-motion: reduce) {
   * {

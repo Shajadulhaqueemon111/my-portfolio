@@ -88,7 +88,12 @@ export function Navbar({ onOpenResume }: NavbarProps) {
     const targetId = href.replace("#", "");
     const targetElement = document.getElementById(targetId);
     if (targetElement) {
-      targetElement.scrollIntoView({ behavior: "smooth" });
+      const winWithLenis = window as unknown as { __lenis?: { scrollTo: (target: HTMLElement, options?: { offset?: number; duration?: number }) => void } };
+      if (winWithLenis.__lenis?.scrollTo) {
+        winWithLenis.__lenis.scrollTo(targetElement, { offset: -70, duration: 1.2 });
+      } else {
+        targetElement.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 

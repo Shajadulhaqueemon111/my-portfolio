@@ -6,6 +6,8 @@ import { GithubIcon, LinkedinIcon, WhatsAppIcon } from "@/components/ui/Icons";
 import { developerInfo } from "@/data/developer";
 import { playSound } from "@/lib/audio";
 import confetti from "canvas-confetti";
+import { ScrollReveal, TextReveal } from "@/components/motion/MotionWrapper";
+import { Tilt3DCard } from "@/components/ui/Tilt3DCard";
 
 export function ContactSection() {
   const [name, setName] = useState("");
@@ -90,24 +92,25 @@ export function ContactSection() {
     <section id="contact" className="py-24 border-t border-zinc-800/60 relative">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
-        <div className="space-y-3 mb-16 text-center sm:text-left">
+        <ScrollReveal className="space-y-3 mb-16 text-center sm:text-left">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 text-xs font-mono">
             <Mail className="w-3.5 h-3.5" />
             <span>Get In Touch</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-100">
-            Let&apos;s Build Something Great.
+            <TextReveal text="Let's Build Something Great." />
           </h2>
           <p className="text-sm sm:text-base text-zinc-400 max-w-xl leading-relaxed">
             Interested in discussing a frontend opportunity, engineering collaboration, or modern web interfaces? Reach out directly.
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* Left Column: Direct Contact & Socials */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/60 backdrop-blur-md space-y-6">
-              <h3 className="text-base font-bold text-zinc-100">Contact Channels</h3>
+          <ScrollReveal direction="left" distance={20} className="lg:col-span-5 space-y-6">
+            <Tilt3DCard intensity={5}>
+              <div className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/60 backdrop-blur-md space-y-6 shadow-xl">
+                <h3 className="text-base font-bold text-zinc-100">Contact Channels</h3>
 
               {/* Email Card */}
               <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-800/80 space-y-2">
@@ -179,11 +182,13 @@ export function ContactSection() {
                 </div>
               </div>
             </div>
-          </div>
+          </Tilt3DCard>
+        </ScrollReveal>
 
           {/* Right Column: Contact Form */}
-          <div className="lg:col-span-7">
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6 sm:p-8 backdrop-blur-md shadow-xl">
+          <ScrollReveal direction="right" distance={20} className="lg:col-span-7">
+            <Tilt3DCard intensity={4}>
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6 sm:p-8 backdrop-blur-md shadow-xl">
               {status === "success" ? (
                 <div className="py-8 text-center space-y-4 animate-in fade-in duration-300">
                   <div className="w-14 h-14 rounded-full bg-emerald-950/80 border border-emerald-700/60 text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/10">
@@ -328,8 +333,9 @@ export function ContactSection() {
                   </button>
                 </form>
               )}
-            </div>
-          </div>
+              </div>
+            </Tilt3DCard>
+          </ScrollReveal>
         </div>
       </div>
     </section>
