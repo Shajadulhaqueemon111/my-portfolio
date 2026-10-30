@@ -92,27 +92,25 @@ export const enterpriseApi = createApi({
         <div className="flex items-center gap-1 bg-zinc-900/90 p-1 rounded-lg border border-zinc-800/80 shrink-0">
           <button
             onClick={() => handleTabChange("profile")}
-            className={`px-2 sm:px-2.5 py-1 text-xs font-mono rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap ${
-              activeTab === "profile"
+            className={`px-2 sm:px-2.5 py-1 text-xs font-mono rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap ${activeTab === "profile"
                 ? "bg-zinc-800 text-emerald-400 shadow-sm border border-zinc-700/60 font-medium"
                 : "text-zinc-400 hover:text-zinc-200"
-            }`}
+              }`}
           >
             <Code2 className="w-3.5 h-3.5 shrink-0" />
             <span>Profile.tsx</span>
           </button>
           <button
             onClick={() => handleTabChange("architecture")}
-            className={`px-2 sm:px-2.5 py-1 text-xs font-mono rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap ${
-              activeTab === "architecture"
+            className={`px-2 sm:px-2.5 py-1 text-xs font-mono rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap ${activeTab === "architecture"
                 ? "bg-zinc-800 text-emerald-400 shadow-sm border border-zinc-700/60 font-medium"
                 : "text-zinc-400 hover:text-zinc-200"
-            }`}
+              }`}
           >
             <Layers className="w-3.5 h-3.5 shrink-0" />
             <span>DataFlow.ts</span>
           </button>
-          <button
+          {/* <button
             onClick={() => handleTabChange("preview")}
             className={`px-2 sm:px-2.5 py-1 text-xs font-mono rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap ${
               activeTab === "preview"
@@ -122,7 +120,7 @@ export const enterpriseApi = createApi({
           >
             <Eye className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
             <span>Live UI</span>
-          </button>
+          </button> */}
         </div>
 
         {/* Copy Button */}
@@ -230,8 +228,8 @@ export const enterpriseApi = createApi({
                     setLiked(!liked);
                   }}
                   className={`px-3 py-1.5 rounded-lg text-xs font-mono border transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 ${liked
-                      ? "bg-rose-500/20 border-rose-500/40 text-rose-300"
-                      : "bg-zinc-800 border-zinc-700/60 text-zinc-300 hover:bg-zinc-700"
+                    ? "bg-rose-500/20 border-rose-500/40 text-rose-300"
+                    : "bg-zinc-800 border-zinc-700/60 text-zinc-300 hover:bg-zinc-700"
                     }`}
                 >
                   <Sparkles className="w-3.5 h-3.5" />
