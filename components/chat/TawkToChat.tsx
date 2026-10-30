@@ -8,8 +8,8 @@ interface TawkToChatProps {
 }
 
 export function TawkToChat({
-  propertyId = process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID || "6ae4b3ee25dc9e346ec8a3dd",
-  widgetId = process.env.NEXT_PUBLIC_TAWK_WIDGET_ID || "default",
+  propertyId = process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID || "6ae4b4fadc4b23347380c3d6",
+  widgetId = process.env.NEXT_PUBLIC_TAWK_WIDGET_ID || "1k66m5t4t",
 }: TawkToChatProps) {
   if (!propertyId) {
     return null;
